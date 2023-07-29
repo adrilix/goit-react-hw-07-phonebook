@@ -1,8 +1,19 @@
-import { createSlice } from "@reduxjs/toolkit"
+import {  createSlice } from "@reduxjs/toolkit"
+
+// export const requestPhonebookThunk = createAsyncThunk ( 'odesa', async (_, thunkAPI) => {
+//   const contactsBook = await requestContactsList();
+//   return contactsBook;
+// })
 
 const initialState = {
-  contacts: [],
-  filter: ''
+  // contacts: [],
+  // filter: ''
+  contacts: {
+    items: [],
+    isLoading: false,
+    error: null
+  },
+  filter: '',
 }
 
 const phonebookSlice = createSlice({
@@ -10,10 +21,10 @@ const phonebookSlice = createSlice({
   initialState,
   reducers: {
     addNewContact : (state, action) => {
-        state.contacts = [...state.contacts, action.payload];
+        state.contacts.items = [...state.contacts.items, action.payload];
     },
     delContact : (state, action) => {
-        state.contacts = (state.contacts.filter(({id}) => id !== action.payload));
+        state.contacts.items = (state.contacts.items.filter(({id}) => id !== action.payload));
     },
     findContacts : (state, action) => {
         state.filter = action.payload;

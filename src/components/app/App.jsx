@@ -8,33 +8,35 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addNewContact, delContact, findContacts } from 'redux/phonebookReducer';
 
 function App() {
-  const contacts = useSelector ((state) => state.phonebook.contacts);
+  const contacts = useSelector ((state) => state.phonebook.contacts.items);
+  const isLoading = useSelector ((state) => state.phonebook.contacts.isLoading);
+  const error = useSelector ((state) => state.phonebook.contacts.error);
+
   console.log(contacts);
+  console.log(isLoading);
+  console.log(error);
+
   const filter = useSelector ((state) => state.phonebook.filter);
   const dispatch = useDispatch()
 
   // useEffect(() => {
-  //    console.log(contacts);
-  //    console.log(filter);
-  // }, [contacts, filter]);
+  //   dispatch(requestPhonebookThunk())
+  // }, [dispatch]);
 
   const getFindedContacts = () => {
+    if (!contacts || contacts.length === 0) {return}
     const normalizedFilter = filter.toLowerCase();
-    const filteredContacts = contacts.filter(contact => {
-      return (
-        contact.name.toLowerCase().includes(normalizedFilter)
-        )
-      })
-    return filteredContacts
+    const filteredContacts = contacts.filter(contact => (
+        contact.name.toLowerCase().includes(normalizedFilter)))
+    return filteredContacts;
   };
-  const handleSubmit = ({ name, number }) => {
+  const handleSubmit = ({ name, phone }) => {
     const contact = {
       id: nanoid(),
       name,
-      number,
+      phone,
     };
     console.log('contact', contact);
-    console.log(contacts);
     const findName = contacts.some(
       el => el.name.toLowerCase() === contact.name.toLowerCase()
     );
@@ -46,8 +48,6 @@ function App() {
   };
 
   const changeFilter = event => dispatch(findContacts(event.target.value));
-
-
 
   const deleteContact = contactId => {
     dispatch(delContact(contactId));

@@ -10,21 +10,21 @@ import {
 
 function ContactForm ({onSubmit}) {
     const [name, setName] = useState('');
-    const [number, setNumber] = useState('');
+    const [phone, setPhone] = useState('');
 
-    const newContact = {name, number};
+    const newContact = {name, phone};
 
     const resetInput = () => {
         setName('');
-        setNumber('');
+        setPhone('');
     };
 
     const handleChangeName = evt => {
         setName(evt.currentTarget.value);
     };
 
-    const handleChangeNumber = evt => {
-        setNumber(evt.currentTarget.value);
+    const handleChangePhone = evt => {
+        setPhone(evt.currentTarget.value);
     };
 
     const handleSubmit = evt => {
@@ -34,7 +34,7 @@ function ContactForm ({onSubmit}) {
     };
 
     const nameInputId = nanoid();
-    const numberInputId = nanoid();
+    const phoneInputId = nanoid();
 
 
         return (
@@ -57,13 +57,13 @@ function ContactForm ({onSubmit}) {
                 <LabelStyled>
                     Number
                     <InputStyled
-                        onChange={handleChangeNumber}
+                        onChange={handleChangePhone}
                         type="tel"
                         name="number"
-                        id={numberInputId}
+                        id={phoneInputId}
                         pattern="\+?\d{1,4}?[\-.\s]?\(?\d{1,3}?\)?[\-.\s]?\d{1,4}[\-.\s]?\d{1,4}[\-.\s]?\d{1,9}"
                         title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-                        value={number}
+                        value={phone}
                         required
                     />
                 </LabelStyled>
