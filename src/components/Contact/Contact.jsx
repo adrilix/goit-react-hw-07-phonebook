@@ -6,10 +6,10 @@ import {
     ButtonDeleteStyled
 } from './ContactStyled'
 
-const Contact = ({ id, name, number, onDeleteContact }) => (
+const Contact = ({ id, name, phone, onDeleteContact }) => (
     <ContactStyled>
         <ContactDataStyled>{name}</ContactDataStyled>
-        <ContactDataStyled>{number}</ContactDataStyled>
+        <ContactDataStyled>{phone}</ContactDataStyled>
         <ButtonDeleteStyled onClick={()=>onDeleteContact(id)} type="button">
             delete
         </ButtonDeleteStyled>

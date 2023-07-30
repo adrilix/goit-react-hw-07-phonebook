@@ -8,7 +8,7 @@ const Filter = ({ value, contacts, onChange, onDeleteContact }) => {
             <div>
                 <h2>Contacts</h2>
                 <label>
-                    Find contact by name
+                    знайди контакт за ім'ям тут  
                     <input onChange={onChange} type="text" name="name" value={value}/>
                 </label>
             </div>

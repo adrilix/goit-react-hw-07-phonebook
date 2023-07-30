@@ -1,13 +1,36 @@
-import {  createSlice } from "@reduxjs/toolkit"
+import { createSlice } from "@reduxjs/toolkit"
+import {createAsyncThunk} from "@reduxjs/toolkit"
+import { getContacts, postContact, removeContact } from "services/api"
 
-// export const requestPhonebookThunk = createAsyncThunk ( 'odesa', async (_, thunkAPI) => {
-//   const contactsBook = await requestContactsList();
-//   return contactsBook;
-// })
+export const fetchContactsThunk = createAsyncThunk ("contacts/fetchAll",
+async (_, {rejectWithValue}) => {
+  try {
+    const data = await getContacts();
+    return data;
+  } catch ( error ) {
+    return rejectWithValue(error.message);
+  }
+});
+export const addContactThunk = createAsyncThunk ("contacts/addContact",
+async (contact, {rejectWithValue}) => {
+  try {
+    const data = await postContact(contact);
+    return data;
+  } catch ( error ) {
+    return rejectWithValue(error.message);
+  }
+});
+export const deleteContactThunk = createAsyncThunk ("contacts/deleteContact",
+async (contactId, {rejectWithValue}) => {
+  try {
+    const data = await removeContact(contactId);
+    return data;
+  } catch ( error ) {
+    return rejectWithValue(error.message);
+  }
+});
 
 const initialState = {
-  // contacts: [],
-  // filter: ''
   contacts: {
     items: [],
     isLoading: false,
@@ -20,64 +43,58 @@ const phonebookSlice = createSlice({
   name: 'phonebook',
   initialState,
   reducers: {
-    addNewContact : (state, action) => {
-        state.contacts.items = [...state.contacts.items, action.payload];
-    },
-    delContact : (state, action) => {
-        state.contacts.items = (state.contacts.items.filter(({id}) => id !== action.payload));
-    },
-    findContacts : (state, action) => {
-        state.filter = action.payload;
+    findContacts: (state, action) => {
+      state.filter = action.payload;
     }
-  }
-});
+  },
+  extraReducers: (builder) => builder
+      .addCase(fetchContactsThunk.pending, (state) => {
+        state.contacts.isLoading = true;
+        state.contacts.error = null;
+    })
+    .addCase(fetchContactsThunk.fulfilled, (state, action) => {
+        state.contacts.isLoading = false;
+        state.contacts.items = action.payload;
+    })
+    .addCase(fetchContactsThunk.rejected, (state, {error}) => { 
+      state.contacts.isLoading = false;
+        state.contacts.error = error.message;
+    })
 
-export const {addNewContact, delContact, findContacts} = phonebookSlice.actions;
+    .addCase(addContactThunk.pending, (state) => {
+      state.contacts.isLoading = true;
+      state.contacts.error = null;
+  })
+    .addCase(addContactThunk.fulfilled, (state, action) => {
+      state.contacts.isLoading = false;
+      state.contacts.items.push(action.payload);
+  })
+  .addCase(addContactThunk.rejected, (state, {error}) => { 
+    state.contacts.isLoading = false;
+      state.contacts.error = error.message;
+  })
+
+  .addCase(deleteContactThunk.pending, (state) => {
+    state.contacts.isLoading = true;
+    state.contacts.error = null;
+})
+  .addCase(deleteContactThunk.fulfilled, (state, action) => {
+    state.contacts.isLoading = false;
+     state.contacts.items = state.contacts.items.filter(
+      contact => contact.id !== action.payload.id
+    );
+})
+.addCase(deleteContactThunk.rejected, (state, {error}) => { 
+  state.contacts.isLoading = false;
+    state.contacts.error = error.message;
+})
+  })
+
+export const { findContacts } = phonebookSlice.actions;
+
+export const selectAllContacts = (state) => state.phonebook.contacts.items;
+export const selectIsLoadingStatus = (state) => state.phonebook.contacts.isLoading;
+export const selectErrorStatus = (state) => state.phonebook.contacts.error;
+export const selectFilter = (state) => state.phonebook.filter;
 
 export const phonebookReducer = phonebookSlice.reducer;
-
-// export const phonebookReducer = ( state = initialState, action ) => {
-
-//   switch(action.type) {
-
-//     case "phonebook/addNewContact": return {
-//         ...state,
-//         contacts: [...state.contacts, action.payload]
-//         // contacts: state.contacts.push(action.payload)
-//     }
-//     case "phonebook/delContact": return {
-//         ...state,
-//         contacts: (state.contacts.filter(({id}) => id !== action.payload))
-//     } 
-
-//     case 'phonebook/findContacts':return {
-//         ...state,
-//         filter: action.payload
-//     }
-//      default: return state;
-//   }
-// }
-
-// export const addNewContact = payload => {
-//   return {
-//     type: 'phonebook/addNewContact',
-//     payload,
-//   }
-// }
-
-// export const delContact = payload => {
-//   return {
-//     type: 'phonebook/delContact',
-//     payload,
-//   }
-// }
-
-// export const findContacts = payload => {
-//   return {
-//     type: 'phonebook/findContacts',
-//     payload
-//   }
-// }
-
-////////action -> {type: "phonebook/addNewContact", payload: contact}
-////////action -> {type: "phonebook/delContact", payload: contact}
