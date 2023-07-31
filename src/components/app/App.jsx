@@ -1,20 +1,17 @@
-// import { useEffect } from 'react';
-
 import ContactForm from '../ContactForm/ContactForm';
 import Filter from '../Filter/Filter';
-import { nanoid } from 'nanoid';
 import { DivStyled } from './AppStyled';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   addContactThunk,
   deleteContactThunk,
-  findContacts,
   fetchContactsThunk,
   selectAllContacts,
   selectIsLoadingStatus,
   selectErrorStatus,
   selectFilter,
 } from 'redux/phonebookReducer';
+import {  findContacts} from 'redux/phonebookSlice'
 import { useEffect } from 'react';
 import { LoaderSpinner } from 'components/Loader/Loader';
 
@@ -51,7 +48,6 @@ function App() {
     const contact = {
       name,
       phone,
-      id: nanoid(),
     };
     console.log('Новий контакт : ', contact);
     const findName = contacts.some(

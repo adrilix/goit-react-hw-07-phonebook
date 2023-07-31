@@ -1,6 +1,6 @@
 
 
-import { phonebookReducer } from "./phonebookReducer";
+import { phonebookReducer } from "./phonebookSlice";
 import { configureStore } from "@reduxjs/toolkit";
 
 // import {
@@ -25,7 +25,7 @@ export const store = configureStore({
   reducer: {
     phonebook: 
     // persistReducer(phonebookPersistConfig,
-       phonebookReducer,
+        phonebookReducer,
 },
 
 // middleware: (getDefaultMiddleware) =>
